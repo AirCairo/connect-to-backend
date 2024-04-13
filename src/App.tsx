@@ -36,7 +36,7 @@ function App() {
     setLoading(true);
 
     apiClient // get -> await promise -> response / error
-      .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+      .get<User[]>("/users", {
         signal: controller.signal,
       })
       .then((response) => {
@@ -57,7 +57,7 @@ function App() {
     //   //try {
     //   //const result = await apiClient // get -> await promise -> response / error
     //   apiClient // get -> await promise -> response / error
-    //     .get<User[]>("https://jsonplaceholder.typicode.com/users", {
+    //     .get<User[]>("/users", {
     //       signal: controller.signal,
     //     })
     //     .then((response) => setUsers(response.data))
