@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Button from "react-bootstrap/Button";
 import ProductList from "./components/ProductList";
 import axios, { AxiosError, CanceledError } from "axios";
 
@@ -76,6 +77,18 @@ function App() {
     // return () => disconnect();
   }, []);
 
+  const deleteUser = (user: User) => {
+    const originalUsers = [...users];
+    setUsers(users.filter((u) => u.id !== user.id));
+
+    axios
+      .delete("https://jsonplaceholder.typicode.com/users/" + user.id)
+      .catch((err) => {
+        setError(err.message);
+        setUsers(originalUsers);
+      });
+  };
+
   return (
     <>
       <div className="p-3 mb-2 bg-light text-dark">
@@ -87,7 +100,15 @@ function App() {
 
         <ul>
           {users.map((user) => (
-            <li key={user.id}>{user.name}</li>
+            <li
+              key={user.id}
+              className="list-group-item d-flex justify-content-between"
+            >
+              {user.name}
+              <Button variant="outline-danger" onClick={() => deleteUser(user)}>
+                Delete
+              </Button>
+            </li>
           ))}
         </ul>
 
