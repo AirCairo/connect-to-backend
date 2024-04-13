@@ -4,71 +4,17 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
 import ProductList from "./components/ProductList";
-import { CanceledError } from "./services/api-client";
 import userService, { User } from "./services/userService";
+import useUsers from "./hooks/useUsers";
 
 const connect = () => console.log("Connecting");
 const disconnect = () => console.log("Disconnecting");
 
 function App() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [error, setError] = useState("");
   const [category, setCategory] = useState("");
-  const ref = useRef<HTMLInputElement>(null);
   const [count, setCount] = useState(0);
-
-  const [isLoading, setLoading] = useState(false);
-
-  // // afterRender
-  // useEffect(() => {
-  //   // Side Effect
-  //   if (ref.current) ref.current.focus();
-  // });
-
-  useEffect(() => {
-    document.title = "My App - Connecting to Backend";
-
-    setLoading(true);
-
-    const { request, cancel } = userService.getAll<User>();
-    request
-      .then((response) => {
-        setUsers(response.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        if (err instanceof CanceledError) return;
-        setError(err.message);
-        setLoading(false);
-      });
-    // .finally(() => {
-    //   setLoading(false);
-    // });
-    return () => cancel();
-
-    // const fetchUsers = async () => {
-    //   //try {
-    //   //const result = await apiClient // get -> await promise -> response / error
-    //   apiClient // get -> await promise -> response / error
-    //     .get<User[]>("/users", {
-    //       signal: controller.signal,
-    //     })
-    //     .then((response) => setUsers(response.data))
-    //     .catch((err) => setError(err.message));
-    //   return () => controller.abort();
-    //   //   setUsers(result.data);
-    //   // } catch (error) {
-    //   //   setError((error as apiClientError).message);
-    //   // }
-    // };
-
-    // //return
-
-    // fetchUsers();
-
-    // connect();12
-    // return () => disconnect();
-  }, []);
+  const ref = useRef<HTMLInputElement>(null);
+  const { users, error, isLoading, setUsers, setError } = useUsers();
 
   const deleteUser = (user: User) => {
     const originalUsers = [...users];
