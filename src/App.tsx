@@ -103,6 +103,22 @@ function App() {
       });
   };
 
+  const updateUser = (user: User) => {
+    const originalUsers = [...users];
+    const updatedUser = { ...user, name: user.name + "!" };
+    setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
+
+    axios
+      .patch(
+        "https://jsonplaceholder.typicode.com/users/" + user.id,
+        updatedUser
+      )
+      .catch((err) => {
+        setError(err.message);
+        setUsers(originalUsers);
+      });
+  };
+
   return (
     <>
       <div className="p-3 mb-2 bg-light text-dark">
@@ -122,9 +138,20 @@ function App() {
               className="list-group-item d-flex justify-content-between"
             >
               {user.name}
-              <Button variant="outline-danger" onClick={() => deleteUser(user)}>
-                Delete
-              </Button>
+              <div>
+                <Button
+                  variant="outline-secondary mx-1"
+                  onClick={() => updateUser(user)}
+                >
+                  Update
+                </Button>
+                <Button
+                  variant="outline-danger"
+                  onClick={() => deleteUser(user)}
+                >
+                  Delete
+                </Button>
+              </div>
             </li>
           ))}
         </ul>
